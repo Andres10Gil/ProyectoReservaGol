@@ -10,7 +10,7 @@ namespace ReservaGol.Controladores
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
         private readonly IActionResult _configuration;     
-
+         
         
         public AutControlador(IUsuarioRepositorio usuarioRepositorio)
         {
