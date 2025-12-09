@@ -6,13 +6,13 @@ using ReservaGol.Repositorios.Interfaces;
 
 namespace ReservaGol.Repositorios
 {
-    public class FacturacionRepositorio
-    {
-        public class FacaturacionRepositorio : IFacturacionRepositorio
+    
+    
+        public class FacturacionRepositorio : IFacturacionRepositorio
         {
             private readonly BdReservaGolContext _context;
 
-            public FacaturacionRepositorio(BdReservaGolContext context)
+            public FacturacionRepositorio(BdReservaGolContext context)
             {
                 _context = context;
             }
@@ -118,5 +118,5 @@ namespace ReservaGol.Repositorios
             }
 
         }
-    }
+    
 }

@@ -18,6 +18,8 @@ namespace ReservaGol
             services.AddScoped<IRolesRepositorio, RolesRepositorio>(); //Registra el repositorio de tipo de documento como un servicio con alcance (scoped) en el contenedor de inyección de dependencias
             services.AddScoped<IReservaRepositorio, ReservaRepositorio>();
             services.AddScoped<ICanchaRepositorio, CanchaRepositorio>();
+            services.AddScoped<IFacturacionRepositorio, FacturacionRepositorio>();
+            services.AddScoped<IPagosRepositorio, PagosRepositorio>();
             return services;
         }
     }

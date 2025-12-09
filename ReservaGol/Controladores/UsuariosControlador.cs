@@ -140,7 +140,7 @@ namespace ReservaGol.Controladores
 
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al Actualizar  n el usuario ");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al Actualizar  el usuario ");
             }
 
         }
