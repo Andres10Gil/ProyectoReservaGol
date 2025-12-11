@@ -12,7 +12,7 @@ namespace ReservaGol.Modelos
 
         [ForeignKey("IdUsuarios")] // Llave foranea a la tabla Usuarios
 
-        public Guid IdUsuarios { get; set; }
+        public Guid IdUsuarios { get; set; } 
 
         public string NombreEmpresa { get; set; }
 
