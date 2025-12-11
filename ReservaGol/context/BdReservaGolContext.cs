@@ -21,6 +21,10 @@ namespace ReservaGol.context
 
         public DbSet<Pagos> Pagos { get; set; }
 
+        public DbSet<Pqrs> Pqrs { get; set; }
+
+        public DbSet<Empresas> Empresas { get; set; }
+
 
         //relacion personalizada/  Configuración de las entidades
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -105,6 +109,22 @@ namespace ReservaGol.context
                 entity.Property(e => e.Estado).IsRequired().HasMaxLength(50).HasColumnName("Estado");
                 entity.Property(e => e.Referencia).IsRequired().HasMaxLength(100).HasColumnName("Referecia");
 
+            });
+            modelBuilder.Entity<Empresas>(entity =>
+            {
+                entity.HasKey(e => e.IdEmpresa);
+                entity.Property(e => e.NombreEmpresa).IsRequired().HasMaxLength(100).HasColumnName("Nombre_Empresa");
+                entity.Property(e => e.Nit).IsRequired().HasColumnName("Nit");
+                entity.Property(e => e.Direccion).IsRequired().HasMaxLength(100).HasColumnName("Direccion");
+                entity.Property(e => e.Ciudad).IsRequired().HasMaxLength(70).HasColumnName("Ciudad");
+                entity.Property(e => e.Telefono).IsRequired().HasColumnName("Telefono");
+                entity.Property(e => e.CorreoElectronico).IsRequired().HasMaxLength(250).HasColumnName("CorreoElectronico");
+                entity.Property(e => e.FechaCreacion).IsRequired().HasColumnName("Fecha_Creacion");
+                entity.Property(e => e.Activo).IsRequired().HasColumnName("Activo");
+
+                entity.HasOne(i => i.usuario)  // Relación con usuario
+                       .WithMany(t => t.Empresas)
+                       .HasForeignKey(e => e.IdUsuarios);
             });
 
             base.OnModelCreating(modelBuilder);

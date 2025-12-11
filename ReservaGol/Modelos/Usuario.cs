@@ -31,5 +31,7 @@ namespace ReservaGol.Modelos
         public ICollection<Reserva> Reservas { get; set; }
 
         public ICollection<Facturacion> Facturacion { get; set; }
+
+        public ICollection<Empresas> Empresas { get; set; }
     }
 }

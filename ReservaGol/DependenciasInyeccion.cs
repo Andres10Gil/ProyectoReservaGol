@@ -20,6 +20,7 @@ namespace ReservaGol
             services.AddScoped<ICanchaRepositorio, CanchaRepositorio>();
             services.AddScoped<IFacturacionRepositorio, FacturacionRepositorio>();
             services.AddScoped<IPagosRepositorio, PagosRepositorio>();
+            services.AddScoped<IEmpresaRepositorio, EmpresaRepositorio>();
             return services;
         }
     }
