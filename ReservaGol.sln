@@ -1,20 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+# SQL Server Management Studio Version 21
+VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservaGol", "ReservaGol\ReservaGol.csproj", "{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Default|Any CPU = Default|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}.Default|Any CPU.ActiveCfg = Release|Any CPU
 		{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AD8D230-ACE2-4D45-8DAD-D1614BBDFE46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CDAC7FD-9D81-41A5-8538-2C263753038E}.Debug|Any CPU.ActiveCfg = Default
+		{4CDAC7FD-9D81-41A5-8538-2C263753038E}.Default|Any CPU.ActiveCfg = Default
+		{4CDAC7FD-9D81-41A5-8538-2C263753038E}.Release|Any CPU.ActiveCfg = Default
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
