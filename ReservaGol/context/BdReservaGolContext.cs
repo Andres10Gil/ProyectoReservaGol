@@ -24,6 +24,8 @@ namespace ReservaGol.context
         public DbSet<Pqrs> Pqrs { get; set; }
 
         public DbSet<Empresas> Empresas { get; set; }
+        public DbSet<Empresas> Equipamientos { get; set; }
+
 
 
         //relacion personalizada/  Configuración de las entidades
@@ -125,6 +127,15 @@ namespace ReservaGol.context
                 entity.HasOne(i => i.usuario)  // Relación con usuario
                        .WithMany(t => t.Empresas)
                        .HasForeignKey(e => e.IdUsuarios);
+            });
+
+            modelBuilder.Entity<Equipamientos>(entity =>
+            {
+                entity.HasKey(e => e.IdEquipo);
+                entity.Property(e => e.NombreEquipo).IsRequired().HasMaxLength(100).HasColumnName("NombreEquipo");
+                entity.Property(e => e.Descripcion).IsRequired().HasMaxLength(250).HasColumnName("Cantidad");
+                entity.Property(e => e.Cantidad).IsRequired().HasColumnName("Cantidad");
+                entity.Property(e => e.Estado).IsRequired().HasMaxLength(250).HasColumnName("Estado");
             });
 
             base.OnModelCreating(modelBuilder);
