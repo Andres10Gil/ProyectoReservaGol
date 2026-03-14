@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReservaGol</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <svg width="34" height="34" viewBox="0 0 52 52" fill="none">
+      <circle cx="26" cy="26" r="24" fill="#0a0a0a" stroke="#00c853" stroke-width="2"/>
+      <circle cx="26" cy="26" r="18" fill="#007a33"/>
+      <polygon points="26,10 31,18 21,18" fill="#0a0a0a"/>
+      <polygon points="26,42 31,34 21,34" fill="#0a0a0a"/>
+      <polygon points="10,26 18,21 18,31" fill="#0a0a0a"/>
+      <polygon points="42,26 34,21 34,31" fill="#0a0a0a"/>
+      <polygon points="26,18 31,22 29,28 23,28 21,22" fill="#0a0a0a"/>
+      <line x1="26" y1="10" x2="26" y2="18" stroke="#00c853" stroke-width="1.5"/>
+      <line x1="26" y1="34" x2="26" y2="42" stroke="#00c853" stroke-width="1.5"/>
+      <line x1="10" y1="26" x2="18" y2="26" stroke="#00c853" stroke-width="1.5"/>
+      <line x1="34" y1="26" x2="42" y2="26" stroke="#00c853" stroke-width="1.5"/>
+    </svg>
+    <div class="logo-text">Reserva<span>Gol</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#canchas" class="active">Canchas</a>
+    <a href="#partidos">Partidos</a>
+    <a href="#foro">Foro</a>
+    <a href="#redes">Comunidad</a>
+    <a href="admin.html">Admin</a>
+  </div>
+  <div class="nav-user">
+    <span id="navUserName">Invitado</span>
+    <button id="navBtn" class="btn-login-nav" onclick="window.location.href='login.html'">Iniciar sesión</button>
+  </div>
+</nav>
+
+<!-- HERO CARRUSEL -->
+<div class="hero">
+  <div class="carousel" id="carousel">
+    <div class="carousel-slide active">
+      <svg class="bg-svg" viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="1200" height="520" fill="#003d1a"/>
+        <rect x="80" y="40" width="1040" height="440" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+        <line x1="600" y1="40" x2="600" y2="480" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <circle cx="600" cy="260" r="80" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <rect x="80" y="170" width="120" height="220" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <rect x="1000" y="170" width="120" height="220" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+        <rect width="1200" height="520" fill="rgba(0,0,0,0.55)"/>
+      </svg>
+      <div class="carousel-overlay">
+        <h1>Reserva tu <span>Cancha</span> ahora</h1>
+        <p>Las mejores canchas de fútbol en tu ciudad</p>
+        <button class="btn-reservar" onclick="document.getElementById('canchas').scrollIntoView({behavior:'smooth'})">Ver canchas disponibles</button>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <svg class="bg-svg" viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="1200" height="520" fill="#004d20"/>
+        <rect x="60" y="30" width="1080" height="460" rx="8" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="4"/>
+        <circle cx="600" cy="260" r="100" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="3"/>
+        <circle cx="600" cy="260" r="6" fill="rgba(255,255,255,0.4)"/>
+        <rect width="1200" height="520" fill="rgba(0,30,10,0.6)"/>
+      </svg>
+      <div class="carousel-overlay">
+        <h1>Organiza tu <span>Partido</span></h1>
+        <p>Encuentra jugadores y arma tu equipo fácilmente</p>
+        <button class="btn-reservar" onclick="document.getElementById('partidos').scrollIntoView({behavior:'smooth'})">Crear partido</button>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <svg class="bg-svg" viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="1200" height="520" fill="#002d10"/>
+        <line x1="0" y1="260" x2="1200" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <line x1="600" y1="0" x2="600" y2="520" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <circle cx="600" cy="260" r="150" fill="none" stroke="rgba(0,200,83,0.2)" stroke-width="2"/>
+        <circle cx="600" cy="260" r="80" fill="none" stroke="rgba(0,200,83,0.15)" stroke-width="2"/>
+        <rect width="1200" height="520" fill="rgba(0,0,0,0.5)"/>
+      </svg>
+      <div class="carousel-overlay">
+        <h1>Únete a la <span>Comunidad</span></h1>
+        <p>Comparte, comenta y conecta con otros jugadores</p>
+        <button class="btn-reservar" onclick="document.getElementById('foro').scrollIntoView({behavior:'smooth'})">Ver foro</button>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-btn prev" onclick="moverCarrusel(-1)">&#8249;</button>
+  <button class="carousel-btn next" onclick="moverCarrusel(1)">&#8250;</button>
+  <div class="carousel-dots" id="carouselDots"></div>
+</div>
+
+<!-- CANCHAS -->
+<section id="canchas" class="section">
+  <div class="section-header">
+    <div>
+      <h2>⚽ Canchas <span>Disponibles</span></h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="canchas-grid" id="canchasGrid">
+    <div class="loading"><div class="spinner"></div><p>Cargando canchas...</p></div>
+  </div>
+</section>
+
+<!-- MODAL CANCHA DETALLE -->
+<div class="modal-overlay" id="modalCancha">
+  <div class="modal-box">
+    <button class="modal-close" onclick="cerrarModalCancha()">✕</button>
+    <div class="modal-header-img" id="modalCanchaImg">
+      <svg width="80" height="80" viewBox="0 0 52 52" fill="none" opacity="0.3">
+        <circle cx="26" cy="26" r="24" stroke="#00c853" stroke-width="2"/>
+        <circle cx="26" cy="26" r="14" fill="none" stroke="#00c853" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="modal-body">
+      <h2 id="modalCanchaNombre">Cancha</h2>
+      <div class="modal-meta">
+        <span id="modalCanchaUbicacion">📍 Ubicación</span>
+        <span id="modalCanchaDim">📐 Dimensiones</span>
+        <span class="precio" id="modalCanchaPrecio">💰 Precio</span>
+      </div>
+      <div class="calendario-wrap">
+        <div class="cal-header">
+          <button class="cal-nav" onclick="cambiarMes(-1)">&#8249;</button>
+          <h3 id="calTitulo"></h3>
+          <button class="cal-nav" onclick="cambiarMes(1)">&#8250;</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <div class="horarios-wrap" id="horariosWrap" style="display:none">
+        <h4 id="horariosTitulo">Horarios disponibles</h4>
+        <div class="horarios-grid" id="horariosGrid"></div>
+      </div>
+      <button class="btn-confirmar-reserva" id="btnConfirmarReserva" disabled onclick="confirmarReserva()">
+        Selecciona fecha y hora
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PARTIDOS -->
+<section id="partidos" class="section">
+  <div class="section-header">
+    <div><h2>🏆 Genera un <span>Partido</span></h2><div class="divider"></div></div>
+  </div>
+  <div class="partidos-section">
+    <form class="partido-form" id="formPartido">
+      <div class="form-group">
+        <label>Nombre del partido</label>
+        <input type="text" id="p-nombre" placeholder="Ej: Partido del domingo" required/>
+      </div>
+      <div class="form-group">
+        <label>Cancha</label>
+        <select id="p-cancha"></select>
+      </div>
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="p-fecha" required/>
+      </div>
+      <div class="form-group">
+        <label>Hora</label>
+        <input type="time" id="p-hora" required/>
+      </div>
+      <div class="form-group">
+        <label>Jugadores necesarios</label>
+        <input type="number" id="p-jugadores" min="2" max="22" value="10"/>
+      </div>
+      <div class="form-group">
+        <label>Nivel</label>
+        <select id="p-nivel">
+          <option>Principiante</option>
+          <option>Intermedio</option>
+          <option>Avanzado</option>
+        </select>
+      </div>
+      <div class="form-group form-full">
+        <label>Descripción</label>
+        <textarea id="p-desc" placeholder="Cuéntanos sobre el partido..."></textarea>
+      </div>
+      <div class="form-full">
+        <button type="submit" class="btn-primary">⚽ Publicar partido</button>
+      </div>
+    </form>
+    <div class="partidos-lista" id="partidosLista"></div>
+  </div>
+</section>
+
+<!-- FORO -->
+<section id="foro" class="section">
+  <div class="section-header">
+    <div><h2>💬 Foro de la <span>Comunidad</span></h2><div class="divider"></div></div>
+  </div>
+  <div class="foro-wrap" id="foroWrap">
+    <div class="loading"><div class="spinner"></div><p>Cargando comentarios...</p></div>
+  </div>
+  <div class="foro-form" id="foroForm" style="margin-top:16px">
+    <textarea id="foroTexto" placeholder="Escribe un comentario... (inicia sesión para publicar)"></textarea>
+    <button class="btn-primary" style="margin-top:10px" onclick="publicarComentario()">Publicar</button>
+  </div>
+</section>
+
+<!-- REDES SOCIALES -->
+<section id="redes" class="section">
+  <div class="section-header">
+    <div><h2>📱 Síguenos en <span>Redes</span></h2><div class="divider"></div></div>
+  </div>
+  <div class="redes-grid">
+    <a href="#" class="red-card red-instagram">
+      <div class="red-icon">📸</div>
+      <h4>Instagram</h4>
+      <p>@ReservaGol</p>
+    </a>
+    <a href="#" class="red-card red-facebook">
+      <div class="red-icon">👥</div>
+      <h4>Facebook</h4>
+      <p>ReservaGol Oficial</p>
+    </a>
+    <a href="#" class="red-card red-twitter">
+      <div class="red-icon">🐦</div>
+      <h4>Twitter / X</h4>
+      <p>@ReservaGol</p>
+    </a>
+    <a href="#" class="red-card red-whatsapp">
+      <div class="red-icon">💬</div>
+      <h4>WhatsApp</h4>
+      <p>Grupo comunidad</p>
+    </a>
+    <a href="#" class="red-card red-youtube">
+      <div class="red-icon">▶️</div>
+      <h4>YouTube</h4>
+      <p>Highlights y torneos</p>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>ReservaGol</span> — Todos los derechos reservados</p>
+  <p style="margin-top:6px">Hecho con ⚽ para la comunidad futbolera</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:5026/api';
+const token = localStorage.getItem('token') || '';
+
+// Navbar
+if (token) {
+  try {
+    const p = JSON.parse(atob(token.split('.')[1]));
+    const nombre = p['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'Usuario';
+    document.getElementById('navUserName').textContent = nombre;
+    document.getElementById('navBtn').textContent = 'Cerrar sesión';
+    document.getElementById('navBtn').className = 'btn-logout';
+    document.getElementById('navBtn').onclick = () => { localStorage.removeItem('token'); location.reload(); };
+  } catch {}
+}
+
+const authHeaders = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+// TOAST
+function toast(msg, error=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// CARRUSEL
+let slideActual = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const dotsContainer = document.getElementById('carouselDots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => irSlide(i);
+  dotsContainer.appendChild(d);
+});
+function irSlide(n) {
+  slides[slideActual].classList.remove('active');
+  document.querySelectorAll('.dot')[slideActual].classList.remove('active');
+  slideActual = (n + slides.length) % slides.length;
+  slides[slideActual].classList.add('active');
+  document.querySelectorAll('.dot')[slideActual].classList.add('active');
+}
+function moverCarrusel(dir) { irSlide(slideActual + dir); }
+setInterval(() => moverCarrusel(1), 5000);
+
+// CANCHAS
+let canchasData = [];
+async function cargarCanchas() {
+  try {
+    const res = await fetch(`${API}/Cancha/ObtenerCancha`, { headers: authHeaders });
+    canchasData = await res.json();
+    const grid = document.getElementById('canchasGrid');
+    if (!canchasData.length) { grid.innerHTML = '<p style="color:#555">Sin canchas disponibles</p>'; return; }
+    grid.innerHTML = canchasData.map((c, i) => `
+      <div class="cancha-card" onclick="abrirCancha(${i})">
+        <div class="cancha-img">
+          <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+            <rect width="100" height="100" fill="#003d1a"/>
+            <rect x="10" y="10" width="80" height="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+            <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.5)"/>
+          </svg>
+        </div>
+        <div class="cancha-info">
+          <h3>${c.nombre || 'Cancha ' + (i+1)}</h3>
+          <div class="cancha-meta">
+            <span>📍 ${c.ubicacion || 'Sin ubicación'}</span>
+            <span>📐 ${c.dimenciones || 'N/A'}</span>
+          </div>
+          <div class="cancha-precio">$${Number(c.precio_Hora || 0).toLocaleString('es-CO')}/hora</div>
+          <button class="btn-ver-cancha">Ver disponibilidad</button>
+        </div>
+      </div>`).join('');
+    // Llenar select de partidos
+    const sel = document.getElementById('p-cancha');
+    sel.innerHTML = canchasData.map(c => `<option value="${c.id_Canchas}">${c.nombre}</option>`).join('');
+  } catch {
+    document.getElementById('canchasGrid').innerHTML = '<p style="color:#ff5252;padding:20px">Error al cargar canchas. Verifica que la API esté corriendo.</p>';
+  }
+}
+cargarCanchas();
+</script>
+
+<script>
+// MODAL CANCHA + CALENDARIO
+let canchaSeleccionada = null, fechaSeleccionada = null, horaSeleccionada = null;
+let calAnio = new Date().getFullYear(), calMes = new Date().getMonth();
+const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+function abrirCancha(i) {
+  canchaSeleccionada = canchasData[i];
+  fechaSeleccionada = null; horaSeleccionada = null;
+  document.getElementById('modalCanchaNombre').textContent = canchaSeleccionada.nombre || 'Cancha';
+  document.getElementById('modalCanchaUbicacion').textContent = '📍 ' + (canchaSeleccionada.ubicacion || 'Sin ubicación');
+  document.getElementById('modalCanchaDim').textContent = '📐 ' + (canchaSeleccionada.dimenciones || 'N/A');
+  document.getElementById('modalCanchaPrecio').textContent = '💰 $' + Number(canchaSeleccionada.precio_Hora || 0).toLocaleString('es-CO') + '/hora';
+  document.getElementById('horariosWrap').style.display = 'none';
+  document.getElementById('btnConfirmarReserva').disabled = true;
+  document.getElementById('btnConfirmarReserva').textContent = 'Selecciona fecha y hora';
+  calAnio = new Date().getFullYear(); calMes = new Date().getMonth();
+  renderCalendario();
+  document.getElementById('modalCancha').classList.add('open');
+}
+
+function cerrarModalCancha() { document.getElementById('modalCancha').classList.remove('open'); }
+
+function renderCalendario() {
+  document.getElementById('calTitulo').textContent = meses[calMes] + ' ' + calAnio;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = dias.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+  const primerDia = new Date(calAnio, calMes, 1).getDay();
+  const totalDias = new Date(calAnio, calMes + 1, 0).getDate();
+  const hoy = new Date();
+  for (let i = 0; i < primerDia; i++) grid.innerHTML += `<div class="cal-day empty"></div>`;
+  for (let d = 1; d <= totalDias; d++) {
+    const fecha = new Date(calAnio, calMes, d);
+    const esHoy = fecha.toDateString() === hoy.toDateString();
+    const esPasado = fecha < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    const selStr = fechaSeleccionada ? new Date(fechaSeleccionada).toDateString() : '';
+    const esSel = fecha.toDateString() === selStr;
+    let cls = 'cal-day';
+    if (esPasado) cls += ' reservado';
+    else if (esSel) cls += ' selected';
+    else if (esHoy) cls += ' today';
+    grid.innerHTML += `<div class="${cls}" onclick="${esPasado ? '' : `seleccionarFecha('${fecha.toISOString().split('T')[0]}')`}">${d}</div>`;
+  }
+}
+
+function cambiarMes(dir) {
+  calMes += dir;
+  if (calMes > 11) { calMes = 0; calAnio++; }
+  if (calMes < 0) { calMes = 11; calAnio--; }
+  renderCalendario();
+}
+
+function seleccionarFecha(fecha) {
+  fechaSeleccionada = fecha;
+  horaSeleccionada = null;
+  renderCalendario();
+  renderHorarios();
+  document.getElementById('horariosWrap').style.display = 'block';
+  document.getElementById('horariosTitulo').textContent = 'Horarios para ' + new Date(fecha + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long', day:'numeric', month:'long'});
+}
+
+function renderHorarios() {
+  const horas = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+  const ocupadas = ['09:00','14:00','18:00']; // simulado, en producción vendría de la API
+  document.getElementById('horariosGrid').innerHTML = horas.map(h => {
+    const ocupado = ocupadas.includes(h);
+    const sel = h === horaSeleccionada;
+    return `<div class="hora-slot ${ocupado ? 'ocupado' : sel ? 'seleccionado' : ''}" onclick="${ocupado ? '' : `seleccionarHora('${h}')`}">${h}${ocupado ? '<br><small>Ocupado</small>' : ''}</div>`;
+  }).join('');
+}
+
+function seleccionarHora(hora) {
+  horaSeleccionada = hora;
+  renderHorarios();
+  const btn = document.getElementById('btnConfirmarReserva');
+  btn.disabled = false;
+  btn.textContent = `Reservar ${fechaSeleccionada} a las ${hora}`;
+}
+
+async function confirmarReserva() {
+  if (!token) { toast('Debes iniciar sesión para reservar', true); cerrarModalCancha(); window.location.href='login.html'; return; }
+  const body = {
+    id_Cancha: canchaSeleccionada.id_Canchas,
+    fecha_reserva: fechaSeleccionada + 'T00:00:00',
+    hora_inicio: horaSeleccionada + ':00',
+    hora_fin: (parseInt(horaSeleccionada) + 1) + ':00:00',
+    estado: 'Confirmada'
+  };
+  try {
+    const res = await fetch(`${API}/ReservaControladores/CrearReserva`, { method:'POST', headers: authHeaders, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error();
+    toast('✅ Reserva confirmada para ' + fechaSeleccionada + ' a las ' + horaSeleccionada);
+    cerrarModalCancha();
+  } catch { toast('Error al crear la reserva. Intenta de nuevo.', true); }
+}
+</script>
+
+<script>
+// PARTIDOS (localStorage como mock)
+let partidos = JSON.parse(localStorage.getItem('partidos') || '[]');
+
+function renderPartidos() {
+  const lista = document.getElementById('partidosLista');
+  if (!partidos.length) { lista.innerHTML = '<p style="color:#555;text-align:center;padding:20px">No hay partidos publicados aún. ¡Sé el primero!</p>'; return; }
+  lista.innerHTML = partidos.map((p, i) => `
+    <div class="partido-item">
+      <div class="partido-info">
+        <h4>⚽ ${p.nombre}</h4>
+        <p>📅 ${p.fecha} ${p.hora} &nbsp;|&nbsp; 📍 ${p.cancha} &nbsp;|&nbsp; 👤 ${p.autor}</p>
+        ${p.desc ? `<p style="margin-top:4px;color:#666">${p.desc}</p>` : ''}
+      </div>
+      <div class="partido-tags">
+        <span class="tag tag-verde">${p.nivel}</span>
+        <span class="tag tag-gris">👥 ${p.jugadores} jugadores</span>
+        <button class="btn-unirse" onclick="unirsePartido(${i})">Unirse</button>
+      </div>
+    </div>`).join('');
+}
+
+document.getElementById('formPartido').addEventListener('submit', e => {
+  e.preventDefault();
+  const canchaEl = document.getElementById('p-cancha');
+  const canchaNombre = canchaEl.options[canchaEl.selectedIndex]?.text || 'Sin cancha';
+  const partido = {
+    nombre: document.getElementById('p-nombre').value,
+    cancha: canchaNombre,
+    fecha: document.getElementById('p-fecha').value,
+    hora: document.getElementById('p-hora').value,
+    jugadores: document.getElementById('p-jugadores').value,
+    nivel: document.getElementById('p-nivel').value,
+    desc: document.getElementById('p-desc').value,
+    autor: token ? (JSON.parse(atob(token.split('.')[1]))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'Anónimo') : 'Anónimo'
+  };
+  partidos.unshift(partido);
+  localStorage.setItem('partidos', JSON.stringify(partidos));
+  renderPartidos();
+  e.target.reset();
+  toast('✅ Partido publicado correctamente');
+});
+
+function unirsePartido(i) {
+  if (!token) { toast('Inicia sesión para unirte a un partido', true); return; }
+  toast('✅ Te has unido al partido: ' + partidos[i].nombre);
+}
+
+renderPartidos();
+
+// FORO (localStorage como mock)
+let comentarios = JSON.parse(localStorage.getItem('comentarios') || '[]');
+if (!comentarios.length) {
+  comentarios = [
+    { autor: 'Carlos M.', texto: '¡Excelente cancha la del norte! Muy bien mantenida.', fecha: '2025-03-10' },
+    { autor: 'Laura P.', texto: 'El proceso de reserva es muy fácil, lo recomiendo.', fecha: '2025-03-12' },
+    { autor: 'Andrés F.', texto: '¿Alguien para partido el sábado en la tarde?', fecha: '2025-03-13' }
+  ];
+  localStorage.setItem('comentarios', JSON.stringify(comentarios));
+}
+
+function renderForo() {
+  const wrap = document.getElementById('foroWrap');
+  wrap.innerHTML = comentarios.map(c => `
+    <div class="comentario">
+      <div class="comentario-header">
+        <div class="avatar">${c.autor.charAt(0).toUpperCase()}</div>
+        <span class="autor">${c.autor}</span>
+        <span class="fecha">${c.fecha}</span>
+      </div>
+      <p>${c.texto}</p>
+    </div>`).join('');
+}
+
+function publicarComentario() {
+  const texto = document.getElementById('foroTexto').value.trim();
+  if (!texto) return;
+  let autor = 'Anónimo';
+  if (token) {
+    try { autor = JSON.parse(atob(token.split('.')[1]))['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'Usuario'; } catch {}
+  }
+  comentarios.unshift({ autor, texto, fecha: new Date().toISOString().split('T')[0] });
+  localStorage.setItem('comentarios', JSON.stringify(comentarios));
+  document.getElementById('foroTexto').value = '';
+  renderForo();
+  toast('✅ Comentario publicado');
+}
+
+renderForo();
+</script>
+</body>
+</html>

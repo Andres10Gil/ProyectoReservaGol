@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReservaGol — Admin</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <svg width="34" height="34" viewBox="0 0 52 52" fill="none">
+      <circle cx="26" cy="26" r="24" fill="#0a0a0a" stroke="#00c853" stroke-width="2"/>
+      <circle cx="26" cy="26" r="18" fill="#007a33"/>
+      <polygon points="26,10 31,18 21,18" fill="#0a0a0a"/>
+      <polygon points="26,42 31,34 21,34" fill="#0a0a0a"/>
+      <line x1="26" y1="10" x2="26" y2="18" stroke="#00c853" stroke-width="1.5"/>
+      <line x1="26" y1="34" x2="26" y2="42" stroke="#00c853" stroke-width="1.5"/>
+    </svg>
+    <div class="logo-text">Reserva<span>Gol</span> <span style="font-size:0.75rem;color:#888;font-weight:400">Admin</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">← Volver al sitio</a>
+  </div>
+  <div class="nav-user">
+    <span id="navUserName">Admin</span>
+    <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+  </div>
+</nav>
+
+<div style="padding:32px;max-width:1200px;margin:0 auto">
+
+  <!-- Stats -->
+  <div style="margin-bottom:32px">
+    <h2 style="font-size:1.5rem;color:#fff;margin-bottom:20px">📊 Estadísticas generales</h2>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><span class="stat-icon">👤</span><div class="stat-num" id="statUsuarios">—</div><div class="stat-label">Usuarios</div></div>
+      <div class="stat-card"><span class="stat-icon">⚽</span><div class="stat-num" id="statCanchas">—</div><div class="stat-label">Canchas</div></div>
+      <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-num" id="statReservas">—</div><div class="stat-label">Reservas</div></div>
+      <div class="stat-card"><span class="stat-icon">🔑</span><div class="stat-num" id="statRoles">—</div><div class="stat-label">Roles</div></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('usuarios')">👤 Usuarios</button>
+    <button class="tab" onclick="showTab('canchas')">⚽ Canchas</button>
+    <button class="tab" onclick="showTab('reservas')">📅 Reservas</button>
+    <button class="tab" onclick="showTab('roles')">🔑 Roles</button>
+  </div>
+
+  <!-- Usuarios -->
+  <div id="tab-usuarios" class="data-section">
+    <div class="data-section-header">
+      <h2>Usuarios</h2>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="badge" id="badge-usuarios">—</span>
+        <button class="btn-primary" style="padding:7px 16px;font-size:0.85rem" onclick="abrirModalUsuario()">+ Crear</button>
+      </div>
+    </div>
+    <div id="content-usuarios" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
+  </div>
+
+  <!-- Canchas -->
+  <div id="tab-canchas" class="data-section" style="display:none">
+    <div class="data-section-header">
+      <h2>Canchas</h2>
+      <span class="badge" id="badge-canchas">—</span>
+    </div>
+    <div id="content-canchas" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
+  </div>
+
+  <!-- Reservas -->
+  <div id="tab-reservas" class="data-section" style="display:none">
+    <div class="data-section-header">
+      <h2>Reservas</h2>
+      <span class="badge" id="badge-reservas">—</span>
+    </div>
+    <div id="content-reservas" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
+  </div>
+
+  <!-- Roles -->
+  <div id="tab-roles" class="data-section" style="display:none">
+    <div class="data-section-header">
+      <h2>Roles</h2>
+      <span class="badge" id="badge-roles">—</span>
+    </div>
+    <div id="content-roles" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
+  </div>
+</div>
+
+<!-- Modal Crear Usuario -->
+<div class="modal-overlay" id="modalUsuario">
+  <div class="modal-box" style="max-width:440px">
+    <button class="modal-close" onclick="cerrarModalUsuario()">✕</button>
+    <div class="modal-body">
+      <h2 style="margin-bottom:20px">👤 Crear usuario</h2>
+      <form id="formCrearUsuario" style="display:grid;gap:14px">
+        <div class="form-group"><label>Nombre</label><input type="text" id="u-nombre" required/></div>
+        <div class="form-group"><label>Correo</label><input type="email" id="u-correo" required/></div>
+        <div class="form-group"><label>Teléfono</label><input type="number" id="u-telefono" required/></div>
+        <div class="form-group"><label>Contraseña</label><input type="password" id="u-pass" required/></div>
+        <div class="form-group">
+          <label>Rol</label>
+          <select id="u-rol"></select>
+          <small id="roles-status" style="color:#888;font-size:0.75rem;margin-top:4px"></small>
+        </div>
+        <p id="modal-error" style="color:#ff5252;font-size:0.85rem;display:none"></p>
+        <p id="modal-ok" style="color:#00c853;font-size:0.85rem;display:none">Usuario creado.</p>
+        <button type="submit" class="btn-primary">Crear usuario</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:5026/api';
+const token = localStorage.getItem('token') || '';
+const authHeaders = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+if (token) {
+  try {
+    const p = JSON.parse(atob(token.split('.')[1]));
+    document.getElementById('navUserName').textContent = p['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'Admin';
+  } catch {}
+}
+function logout() { localStorage.removeItem('token'); window.location.href = 'login.html'; }
+function toast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (err ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+const tabNames = ['usuarios','canchas','reservas','roles'];
+function showTab(name) {
+  tabNames.forEach(t => document.getElementById(`tab-${t}`).style.display = t === name ? 'block' : 'none');
+  document.querySelectorAll('.tab').forEach((b, i) => b.classList.toggle('active', tabNames[i] === name));
+}
+
+async function fetchData(ep) {
+  const res = await fetch(`${API}/${ep}`, { headers: authHeaders });
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+}
+
+function renderTable(cid, bid, data, cols) {
+  document.getElementById(bid).textContent = data.length + ' registros';
+  if (!data.length) { document.getElementById(cid).innerHTML = '<p style="color:#555;padding:20px;text-align:center">Sin datos</p>'; return; }
+  const ths = cols.map(c => `<th>${c.label}</th>`).join('');
+  const rows = data.map(row => `<tr>${cols.map(c => {
+    const v = row[c.key] ?? '—';
+    if (c.badge) { const cls = (v===true||v==='Activo'||v==='Confirmada') ? 'status-active':'status-inactive'; return `<td><span class="status-badge ${cls}">${v===true?'Activo':v===false?'Inactivo':v}</span></td>`; }
+    if (c.date && v!=='—') return `<td>${new Date(v).toLocaleDateString('es-CO')}</td>`;
+    if (c.money) return `<td>$${Number(v).toLocaleString('es-CO')}</td>`;
+    return `<td>${String(v).length>40?String(v).substring(0,40)+'...':v}</td>`;
+  }).join('')}</tr>`).join('');
+  document.getElementById(cid).innerHTML = `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+let rolesData = [];
+
+fetchData('Usuarios/ObtenerUsuarios').then(d => {
+  document.getElementById('statUsuarios').textContent = d.length;
+  renderTable('content-usuarios','badge-usuarios', d, [
+    {key:'nombre',label:'Nombre'},{key:'correo',label:'Correo'},{key:'telefono',label:'Teléfono'},{key:'fecha_registro',label:'Registro',date:true}
+  ]);
+}).catch(() => { document.getElementById('content-usuarios').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+
+fetchData('Cancha/ObtenerCancha').then(d => {
+  document.getElementById('statCanchas').textContent = d.length;
+  renderTable('content-canchas','badge-canchas', d, [
+    {key:'nombre',label:'Nombre'},{key:'ubicacion',label:'Ubicación'},{key:'dimenciones',label:'Dimensiones'},{key:'precio_Hora',label:'Precio/Hora',money:true}
+  ]);
+}).catch(() => { document.getElementById('content-canchas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+
+fetchData('ReservaControladores/ObtenerReservas').then(d => {
+  document.getElementById('statReservas').textContent = d.length;
+  renderTable('content-reservas','badge-reservas', d, [
+    {key:'fecha_reserva',label:'Fecha',date:true},{key:'hora_inicio',label:'Inicio'},{key:'hora_fin',label:'Fin'},{key:'estado',label:'Estado',badge:true}
+  ]);
+}).catch(() => { document.getElementById('content-reservas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+
+fetchData('RolesControladores/ObtenerRoles').then(d => {
+  rolesData = d;
+  document.getElementById('statRoles').textContent = d.length;
+  renderTable('content-roles','badge-roles', d, [
+    {key:'nombre_rol',label:'Rol'},{key:'descripcion',label:'Descripción'},{key:'nivel_acceso',label:'Nivel'},{key:'activo',label:'Estado',badge:true}
+  ]);
+}).catch(() => {
+  document.getElementById('content-roles').innerHTML='<p style="color:#ff5252;padding:20px">❌ Error al cargar roles. Verifica que la API esté corriendo con <b>dotnet run</b> y acepta el certificado en <a href="http://localhost:5026/swagger" target="_blank" style="color:#00c853">http://localhost:5026/swagger</a></p>';
+  document.getElementById('statRoles').textContent = '!';
+});
+
+function abrirModalUsuario() {
+  document.getElementById('modalUsuario').classList.add('open');
+  document.getElementById('modal-error').style.display='none';
+  document.getElementById('modal-ok').style.display='none';
+  document.getElementById('formCrearUsuario').reset();
+  const sel = document.getElementById('u-rol');
+  const status = document.getElementById('roles-status');
+  if (rolesData.length) {
+    // Solo roles que NO sean admin
+    const rolesFiltrados = rolesData.filter(r =>
+      !r.nombre_rol?.toLowerCase().includes('admin')
+    );
+    if (rolesFiltrados.length) {
+      sel.innerHTML = rolesFiltrados.map(r=>`<option value="${r.id_Roles}">${r.nombre_rol}</option>`).join('');
+      status.textContent = '';
+    } else {
+      sel.innerHTML = '<option value="">Sin roles disponibles</option>';
+      status.textContent = 'No hay roles de usuario disponibles';
+    }
+  } else {
+    sel.innerHTML = '<option value="">Sin roles — API no disponible</option>';
+    status.textContent = '⚠️ Primero acepta el certificado en http://localhost:5026/swagger y recarga la página';
+    status.style.color = '#ff9800';
+  }
+}
+function cerrarModalUsuario() { document.getElementById('modalUsuario').classList.remove('open'); }
+
+document.getElementById('formCrearUsuario').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent='Creando...'; btn.disabled=true;
+  const body = {
+    nombre: document.getElementById('u-nombre').value,
+    correo: document.getElementById('u-correo').value,
+    telefono: parseInt(document.getElementById('u-telefono').value),
+    contraseña: document.getElementById('u-pass').value,
+    id_Roles: document.getElementById('u-rol').value,
+    fecha_registro: new Date().toISOString()
+  };
+  try {
+    const res = await fetch(`${API}/Usuarios/CrearUsuario`, { method:'POST', headers:authHeaders, body:JSON.stringify(body) });
+    if (!res.ok) throw new Error();
+    document.getElementById('modal-ok').style.display='block';
+    document.getElementById('modal-error').style.display='none';
+    toast('✅ Usuario creado');
+    setTimeout(cerrarModalUsuario, 1500);
+    fetchData('Usuarios/ObtenerUsuarios').then(d => renderTable('content-usuarios','badge-usuarios',d,[{key:'nombre',label:'Nombre'},{key:'correo',label:'Correo'},{key:'telefono',label:'Teléfono'},{key:'fecha_registro',label:'Registro',date:true}]));
+  } catch {
+    document.getElementById('modal-error').style.display='block';
+    toast('Error al crear usuario', true);
+  } finally { btn.textContent='Crear usuario'; btn.disabled=false; }
+});
+</script>
+</body>
+</html>

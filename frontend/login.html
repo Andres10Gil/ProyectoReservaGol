@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReservaGol — Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="cancha-bg"></div>
+    <div class="login-card">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="24" fill="#0a0a0a" stroke="#00c853" stroke-width="2"/>
+          <circle cx="26" cy="26" r="18" fill="#007a33"/>
+          <polygon points="26,10 31,18 21,18" fill="#0a0a0a"/>
+          <polygon points="26,42 31,34 21,34" fill="#0a0a0a"/>
+          <polygon points="10,26 18,21 18,31" fill="#0a0a0a"/>
+          <polygon points="42,26 34,21 34,31" fill="#0a0a0a"/>
+          <polygon points="26,18 31,22 29,28 23,28 21,22" fill="#0a0a0a"/>
+          <line x1="26" y1="10" x2="26" y2="18" stroke="#00c853" stroke-width="1"/>
+          <line x1="26" y1="34" x2="26" y2="42" stroke="#00c853" stroke-width="1"/>
+          <line x1="10" y1="26" x2="18" y2="26" stroke="#00c853" stroke-width="1"/>
+          <line x1="34" y1="26" x2="42" y2="26" stroke="#00c853" stroke-width="1"/>
+          <line x1="31" y1="18" x2="34" y2="21" stroke="#00c853" stroke-width="1"/>
+          <line x1="21" y1="18" x2="18" y2="21" stroke="#00c853" stroke-width="1"/>
+          <line x1="31" y1="34" x2="34" y2="31" stroke="#00c853" stroke-width="1"/>
+          <line x1="21" y1="34" x2="18" y2="31" stroke="#00c853" stroke-width="1"/>
+        </svg>
+        <div class="logo-text">Reserva<span>Gol</span></div>
+      </div>
+
+      <h2>Inicia sesión para continuar</h2>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Correo</label>
+          <input type="email" id="correo" placeholder="correo@ejemplo.com" required />
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="contrasena" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn-primary">Entrar</button>
+        <p class="error-msg" id="errorMsg">Usuario o contraseña incorrectos.</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:5026/api';
+
+    // Si ya tiene token, va directo al dashboard
+    if (localStorage.getItem('token')) window.location.href = 'index.html';
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'Ingresando...';
+      btn.disabled = true;
+
+      const body = {
+        nombreUsuario: document.getElementById('correo').value,
+        contraseña: document.getElementById('contrasena').value
+      };
+
+      try {
+        const res = await fetch(`${API}/Aut/Login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        localStorage.setItem('token', data.token);
+        window.location.href = 'index.html';
+      } catch {
+        document.getElementById('errorMsg').style.display = 'block';
+        btn.textContent = 'Entrar';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
