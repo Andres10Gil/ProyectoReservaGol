@@ -10,9 +10,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
-        policy.WithOrigins("http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:5026")
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+        policy.WithOrigins(
+            "http://127.0.0.1:5500", 
+            "http://localhost:5500",
+            "http://localhost:3000",
+            "null"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 });
 
 // Swagger con soporte para JWT
