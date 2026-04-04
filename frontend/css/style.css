@@ -32,7 +32,7 @@ body { background:var(--negro); color:var(--texto); min-height:100vh; }
 .carousel-overlay h1 span { color:var(--verde); }
 .carousel-overlay p { color:#ccc; margin-top:12px; font-size:1.05rem; }
 .carousel-overlay .btn-reservar { margin-top:24px; padding:13px 36px; background:var(--verde); color:#000; font-weight:700; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition:all 0.2s; }
-.carousel-overlay .btn-reservar:hover { background:#56ffae; transform:translateY(-2px); }
+.carousel-overlay .btn-reservar:hover { background:#2f1759; transform:translateY(-2px); }
 .carousel-dots { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; }
 .dot { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; transition:all 0.2s; }
 .dot.active { background:var(--verde); transform:scale(1.3); }
