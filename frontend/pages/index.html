@@ -4,7 +4,13 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ReservaGol</title>
-  <link rel="stylesheet" href="../css/style.css"/>`n  <script src="../js/config.js"></script>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/canchas-data.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="../js/config.js"></script>
+  <script src="../js/canchas-data.js"></script>
 </head>
 <body>
 
@@ -111,11 +117,7 @@
 <div class="modal-overlay" id="modalCancha">
   <div class="modal-box">
     <button class="modal-close" onclick="cerrarModalCancha()">✕</button>
-    <div class="modal-header-img" id="modalCanchaImg">
-      <svg width="80" height="80" viewBox="0 0 52 52" fill="none" opacity="0.3">
-        <circle cx="26" cy="26" r="24" stroke="#00c853" stroke-width="2"/>
-        <circle cx="26" cy="26" r="14" fill="none" stroke="#00c853" stroke-width="1.5"/>
-      </svg>
+    <div class="modal-header-img" id="modalCanchaImg" style="height:200px;overflow:hidden;border-radius:16px 16px 0 0">
     </div>
     <div class="modal-body">
       <h2 id="modalCanchaNombre">Cancha</h2>
@@ -123,6 +125,13 @@
         <span id="modalCanchaUbicacion">📍 Ubicación</span>
         <span id="modalCanchaDim">📐 Dimensiones</span>
         <span class="precio" id="modalCanchaPrecio">💰 Precio</span>
+      </div>
+      <p id="modalCanchaDesc" style="color:#888;font-size:0.88rem;margin:8px 0 12px"></p>
+      <div id="modalAmenidades" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px"></div>
+      <!-- MAPA -->
+      <div style="margin-bottom:20px">
+        <h4 style="color:#aaa;font-size:0.85rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">📍 Ubicación en el mapa</h4>
+        <div id="mapaCancha" style="height:200px;border-radius:10px;border:1px solid #2a2a2a;z-index:1"></div>
       </div>
       <div class="calendario-wrap">
         <div class="cal-header">
@@ -340,16 +349,40 @@ const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 function abrirCancha(i) {
   canchaSeleccionada = canchasData[i];
   fechaSeleccionada = null; horaSeleccionada = null;
+  const visual = CANCHAS_VISUAL[canchaSeleccionada.nombre] || { color: '#1a5c2a', lat: 4.6534, lng: -74.0836, amenidades: [], descripcion: '' };
+
+  // Imagen SVG de la cancha
+  document.getElementById('modalCanchaImg').innerHTML = generarImagenCancha(canchaSeleccionada.nombre, visual.color);
+
+  // Datos básicos
   document.getElementById('modalCanchaNombre').textContent = canchaSeleccionada.nombre || 'Cancha';
   document.getElementById('modalCanchaUbicacion').textContent = '📍 ' + (canchaSeleccionada.ubicacion || 'Sin ubicación');
   document.getElementById('modalCanchaDim').textContent = '📐 ' + (canchaSeleccionada.dimenciones || 'N/A');
   document.getElementById('modalCanchaPrecio').textContent = '💰 $' + Number(canchaSeleccionada.precio_Hora || 0).toLocaleString('es-CO') + '/hora';
+  document.getElementById('modalCanchaDesc').textContent = visual.descripcion || '';
+  document.getElementById('modalAmenidades').innerHTML = (visual.amenidades || [])
+    .map(a => `<span style="font-size:0.75rem;background:#1e1e1e;padding:4px 10px;border-radius:20px;color:#aaa;border:1px solid #2a2a2a">${a}</span>`).join('');
+
   document.getElementById('horariosWrap').style.display = 'none';
   document.getElementById('btnConfirmarReserva').disabled = true;
   document.getElementById('btnConfirmarReserva').textContent = 'Selecciona fecha y hora';
   calAnio = new Date().getFullYear(); calMes = new Date().getMonth();
   renderCalendario();
   document.getElementById('modalCancha').classList.add('open');
+
+  // Mapa con Leaflet (se inicializa después de que el modal sea visible)
+  setTimeout(() => {
+    const mapaEl = document.getElementById('mapaCancha');
+    mapaEl.innerHTML = ''; // limpiar mapa anterior
+    const mapa = L.map('mapaCancha').setView([visual.lat, visual.lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+    L.marker([visual.lat, visual.lng])
+      .addTo(mapa)
+      .bindPopup(`<b>${canchaSeleccionada.nombre}</b><br>${canchaSeleccionada.ubicacion}`)
+      .openPopup();
+  }, 200);
 }
 
 function cerrarModalCancha() { document.getElementById('modalCancha').classList.remove('open'); }
