@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "name": "Auto Push AndresGil → main",
   "description": "Cuando el agente termina, sube los cambios a la rama AndresGil y los mergea a main automáticamente",
   "version": "1",
