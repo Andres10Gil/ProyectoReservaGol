@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReservaGol.Modelos;
 using ReservaGol.Repositorios.Interfaces;
 
 namespace ReservaGol.Controladores
@@ -44,6 +45,21 @@ namespace ReservaGol.Controladores
                 return Ok(cancha);
             }
             catch { return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener la cancha."); }
+        }
+        [HttpPost("CrearCancha")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CrearCancha([FromBody] Cancha cancha)
+        {
+            try
+            {
+                var resultado = await _canchaRepositorio.CrearCancha(cancha);
+                if (!resultado)
+                    return BadRequest("No se pudo crear la cancha.");
+                return Ok("Cancha creada correctamente.");
+            }
+            catch { return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear la cancha."); }
         }
     }
 }

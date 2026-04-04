@@ -25,5 +25,19 @@ namespace ReservaGol.Repositorios
             try { return await _context.Canchas.FirstOrDefaultAsync(x => x.Id_Canchas == id); }
             catch (Exception ex) { throw new Exception(ex.Message); }
         }
+
+        // Crea una nueva cancha en la BD
+        // Genera un nuevo GUID como ID y guarda el registro
+        public async Task<bool> CrearCancha(Cancha cancha)
+        {
+            try
+            {
+                cancha.Id_Canchas = Guid.NewGuid(); // genera ID único automáticamente
+                _context.Canchas.Add(cancha);        // agrega al contexto (aún no a la BD)
+                await _context.SaveChangesAsync();   // ejecuta el INSERT en la BD
+                return true;
+            }
+            catch { return false; }
+        }
     }
 }
