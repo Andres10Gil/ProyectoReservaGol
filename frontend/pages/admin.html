@@ -225,7 +225,7 @@ function abrirModalCancha() {
 }
 function cerrarModalCancha() { document.getElementById('modalCancha').classList.remove('open'); }
 
-// Envía los datos de la nueva cancha al endpoint POST /api/Cancha/CrearCancha
+// Envía los datos de la nueva cancha al endpoint POST /api/CanchaControlador/CrearCancha
 document.getElementById('formCrearCancha').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
