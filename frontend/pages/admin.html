@@ -211,7 +211,8 @@ fetchData('RolesControladores/ObtenerRoles').then(d => {
     {key:'nombre_rol',label:'Rol'},{key:'descripcion',label:'Descripción'},{key:'nivel_acceso',label:'Nivel'},{key:'activo',label:'Estado',badge:true}
   ]);
 }).catch(() => {
-  document.getElementById('content-roles').innerHTML='<p style="color:#ff5252;padding:20px">❌ Error al cargar roles. Verifica que la API esté corriendo con <b>dotnet run</b> y acepta el certificado en <a href="" + CONFIG.API.replace("/api","") + "/swagger"" target="_blank" style="color:#00c853">" + CONFIG.API.replace("/api","") + "/swagger"</a></p>';
+  const swaggerUrl = CONFIG.API.replace('/api','') + '/swagger';
+  document.getElementById('content-roles').innerHTML=`<p style="color:#ff5252;padding:20px">Error al cargar roles. La API no responde. Ejecuta <b>dotnet run</b> y recarga.</p>`;
   document.getElementById('statRoles').textContent = '!';
 });
 
@@ -282,7 +283,7 @@ function abrirModalUsuario() {
     }
   } else {
     sel.innerHTML = '<option value="">Sin roles — API no disponible</option>';
-    status.textContent = '⚠️ Primero acepta el certificado en " + CONFIG.API.replace("/api","") + "/swagger" y recarga la página';
+    status.textContent = '?? La API no responde. Ejecuta dotnet run y recarga la p�gina';
     status.style.color = '#ff9800';
   }
 }
