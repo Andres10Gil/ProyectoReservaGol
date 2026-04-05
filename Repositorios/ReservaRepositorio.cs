@@ -35,7 +35,11 @@ namespace ReservaGol.Repositorios
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR CrearReserva: {ex.Message} | Inner: {ex.InnerException?.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> EliminarReserva(Guid id)
