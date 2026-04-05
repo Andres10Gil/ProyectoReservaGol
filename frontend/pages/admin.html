@@ -4,7 +4,22 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ReservaGol — Admin</title>
-  <link rel="stylesheet" href="../css/style.css"/>`n  <script src="../js/config.js"></script>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <script src="../js/config.js"></script>
+  <style>
+    .notif-badge { position:fixed;top:70px;right:20px;z-index:500;display:flex;flex-direction:column;gap:8px;max-width:320px; }
+    .notif { background:#1e1e1e;border-left:4px solid var(--verde);border-radius:8px;padding:12px 16px;font-size:0.85rem;color:#ddd;box-shadow:0 4px 16px rgba(0,0,0,0.4);animation:slideIn 0.3s ease; }
+    .notif.error { border-left-color:#ff5252; }
+    .notif.info { border-left-color:#1da1f2; }
+    @keyframes slideIn { from { transform:translateX(100%);opacity:0; } to { transform:translateX(0);opacity:1; } }
+    .btn-danger { padding:5px 12px;background:transparent;border:1px solid #ff5252;border-radius:6px;color:#ff5252;cursor:pointer;font-size:0.78rem;transition:all 0.2s; }
+    .btn-danger:hover { background:#ff5252;color:#fff; }
+    .horarios-disponibles { display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-top:12px; }
+    .hora-item { padding:6px;text-align:center;border-radius:6px;font-size:0.78rem;border:1px solid #333;color:#aaa; }
+    .hora-item.libre { border-color:var(--verde);color:var(--verde); }
+    .hora-item.ocupado { background:rgba(255,82,82,0.1);color:#ff5252;border-color:#ff525233; }
+    .reserva-form { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+  </style>
 </head>
 <body>
 <nav class="navbar">
@@ -28,12 +43,15 @@
   </div>
 </nav>
 
+<!-- Notificaciones flotantes -->
+<div class="notif-badge" id="notifContainer"></div>
+
 <div style="padding:32px;max-width:1200px;margin:0 auto">
 
   <!-- Stats -->
   <div style="margin-bottom:32px">
     <h2 style="font-size:1.5rem;color:#fff;margin-bottom:20px">📊 Estadísticas generales</h2>
-    <div class="stats-grid" id="statsGrid">
+    <div class="stats-grid">
       <div class="stat-card"><span class="stat-icon">👤</span><div class="stat-num" id="statUsuarios">—</div><div class="stat-label">Usuarios</div></div>
       <div class="stat-card"><span class="stat-icon">⚽</span><div class="stat-num" id="statCanchas">—</div><div class="stat-label">Canchas</div></div>
       <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-num" id="statReservas">—</div><div class="stat-label">Reservas</div></div>
@@ -47,6 +65,7 @@
     <button class="tab" onclick="showTab('canchas')">⚽ Canchas</button>
     <button class="tab" onclick="showTab('reservas')">📅 Reservas</button>
     <button class="tab" onclick="showTab('roles')">🔑 Roles</button>
+    <button class="tab" onclick="showTab('nueva-reserva')">➕ Nueva Reserva</button>
   </div>
 
   <!-- Usuarios -->
@@ -67,7 +86,7 @@
       <h2>Canchas</h2>
       <div style="display:flex;gap:10px;align-items:center">
         <span class="badge" id="badge-canchas">—</span>
-        <button class="btn-primary" style="padding:7px 16px;font-size:0.85rem" onclick="abrirModalCancha()">+ Agregar cancha</button>
+        <button class="btn-primary" style="padding:7px 16px;font-size:0.85rem" onclick="abrirModalCancha()">+ Agregar</button>
       </div>
     </div>
     <div id="content-canchas" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
@@ -89,6 +108,78 @@
       <span class="badge" id="badge-roles">—</span>
     </div>
     <div id="content-roles" class="loading"><div class="spinner"></div><p>Cargando...</p></div>
+  </div>
+
+  <!-- Nueva Reserva (para reservas por teléfono) -->
+  <div id="tab-nueva-reserva" class="data-section" style="display:none">
+    <div class="data-section-header">
+      <h2>➕ Nueva Reserva Manual</h2>
+      <small style="color:#888">Para reservas recibidas por teléfono</small>
+    </div>
+    <form class="reserva-form" id="formNuevaReserva">
+      <div class="form-group">
+        <label>Usuario</label>
+        <select id="r-usuario"></select>
+      </div>
+      <div class="form-group">
+        <label>Cancha</label>
+        <select id="r-cancha" onchange="cargarHorariosAdmin()"></select>
+      </div>
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" id="r-fecha" onchange="cargarHorariosAdmin()"/>
+      </div>
+      <div class="form-group">
+        <label>Hora inicio</label>
+        <select id="r-hora">
+          <option value="07:00:00">07:00</option>
+          <option value="08:00:00">08:00</option>
+          <option value="09:00:00">09:00</option>
+          <option value="10:00:00">10:00</option>
+          <option value="11:00:00">11:00</option>
+          <option value="12:00:00">12:00</option>
+          <option value="13:00:00">13:00</option>
+          <option value="14:00:00">14:00</option>
+          <option value="15:00:00">15:00</option>
+          <option value="16:00:00">16:00</option>
+          <option value="17:00:00">17:00</option>
+          <option value="18:00:00">18:00</option>
+          <option value="19:00:00">19:00</option>
+          <option value="20:00:00">20:00</option>
+          <option value="21:00:00">21:00</option>
+          <option value="22:00:00">22:00</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>Horarios disponibles para la fecha y cancha seleccionada</label>
+        <div class="horarios-disponibles" id="horariosAdmin">
+          <p style="color:#555;font-size:0.82rem">Selecciona cancha y fecha para ver disponibilidad</p>
+        </div>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <button type="submit" class="btn-primary">📅 Crear reserva</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<!-- Modal Crear Cancha -->
+<div class="modal-overlay" id="modalCancha">
+  <div class="modal-box" style="max-width:440px">
+    <button class="modal-close" onclick="cerrarModalCancha()">✕</button>
+    <div class="modal-body">
+      <h2 style="margin-bottom:20px">⚽ Agregar cancha</h2>
+      <form id="formCrearCancha" style="display:grid;gap:14px">
+        <div class="form-group"><label>Nombre</label><input type="text" id="c-nombre" required/></div>
+        <div class="form-group"><label>Ubicación</label><input type="text" id="c-ubicacion" required/></div>
+        <div class="form-group"><label>Dimensiones</label><input type="text" id="c-dim" required/></div>
+        <div class="form-group"><label>Precio por hora ($)</label><input type="number" id="c-precio" required/></div>
+        <p id="cancha-error" style="color:#ff5252;font-size:0.85rem;display:none">Error al crear la cancha.</p>
+        <p id="cancha-ok" style="color:#00c853;font-size:0.85rem;display:none">Cancha creada.</p>
+        <button type="submit" class="btn-primary">Crear cancha</button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -118,30 +209,12 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- Modal Crear Cancha -->
-<div class="modal-overlay" id="modalCancha">
-  <div class="modal-box" style="max-width:440px">
-    <button class="modal-close" onclick="cerrarModalCancha()">✕</button>
-    <div class="modal-body">
-      <h2 style="margin-bottom:20px">⚽ Agregar cancha</h2>
-      <form id="formCrearCancha" style="display:grid;gap:14px">
-        <div class="form-group"><label>Nombre</label><input type="text" id="c-nombre" placeholder="Cancha Norte" required/></div>
-        <div class="form-group"><label>Ubicación</label><input type="text" id="c-ubicacion" placeholder="Calle 10 #5-20" required/></div>
-        <div class="form-group"><label>Dimensiones</label><input type="text" id="c-dim" placeholder="40x20 metros" required/></div>
-        <div class="form-group"><label>Precio por hora ($)</label><input type="number" id="c-precio" placeholder="50000" required/></div>
-        <p id="cancha-error" style="color:#ff5252;font-size:0.85rem;display:none">Error al crear la cancha.</p>
-        <p id="cancha-ok" style="color:#00c853;font-size:0.85rem;display:none">Cancha creada correctamente.</p>
-        <button type="submit" class="btn-primary">Crear cancha</button>
-      </form>
-    </div>
-  </div>
-</div>
-
 <script>
 const API = CONFIG.API;
 const token = localStorage.getItem('token') || '';
 const authHeaders = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
 
+// Navbar
 if (token) {
   try {
     const p = JSON.parse(atob(token.split('.')[1]));
@@ -149,75 +222,181 @@ if (token) {
   } catch {}
 }
 function logout() { localStorage.removeItem('token'); window.location.href = 'login.html'; }
-function toast(msg, err=false) {
+
+// ─── NOTIFICACIONES ───────────────────────────────────────────────────────────
+// Muestra notificaciones flotantes en la esquina superior derecha
+function notificar(msg, tipo = 'success') {
+  const container = document.getElementById('notifContainer');
+  const div = document.createElement('div');
+  div.className = `notif ${tipo === 'error' ? 'error' : tipo === 'info' ? 'info' : ''}`;
+  div.innerHTML = `${tipo === 'success' ? '✅' : tipo === 'error' ? '❌' : 'ℹ️'} ${msg}`;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 5000);
+}
+
+// Toast pequeño abajo
+function toast(msg, err = false) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast show' + (err ? ' error' : '');
   setTimeout(() => t.className = 'toast', 3000);
 }
 
-const tabNames = ['usuarios','canchas','reservas','roles'];
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const tabNames = ['usuarios','canchas','reservas','roles','nueva-reserva'];
 function showTab(name) {
   tabNames.forEach(t => document.getElementById(`tab-${t}`).style.display = t === name ? 'block' : 'none');
   document.querySelectorAll('.tab').forEach((b, i) => b.classList.toggle('active', tabNames[i] === name));
 }
 
+// ─── FETCH GENÉRICO ───────────────────────────────────────────────────────────
 async function fetchData(ep) {
   const res = await fetch(`${API}/${ep}`, { headers: authHeaders });
   if (!res.ok) throw new Error(res.status);
   return res.json();
 }
 
+// ─── RENDER TABLA ─────────────────────────────────────────────────────────────
 function renderTable(cid, bid, data, cols) {
   document.getElementById(bid).textContent = data.length + ' registros';
   if (!data.length) { document.getElementById(cid).innerHTML = '<p style="color:#555;padding:20px;text-align:center">Sin datos</p>'; return; }
-  const ths = cols.map(c => `<th>${c.label}</th>`).join('');
+  const ths = cols.map(c => `<th>${c.label}</th>`).join('') + '<th>Acciones</th>';
   const rows = data.map(row => `<tr>${cols.map(c => {
     const v = row[c.key] ?? '—';
     if (c.badge) { const cls = (v===true||v==='Activo'||v==='Confirmada') ? 'status-active':'status-inactive'; return `<td><span class="status-badge ${cls}">${v===true?'Activo':v===false?'Inactivo':v}</span></td>`; }
     if (c.date && v!=='—') return `<td>${new Date(v).toLocaleDateString('es-CO')}</td>`;
     if (c.money) return `<td>$${Number(v).toLocaleString('es-CO')}</td>`;
     return `<td>${String(v).length>40?String(v).substring(0,40)+'...':v}</td>`;
-  }).join('')}</tr>`).join('');
+  }).join('')}<td>${row._acciones || '—'}</td></tr>`).join('');
   document.getElementById(cid).innerHTML = `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-let rolesData = [];
+// ─── CARGAR DATOS ─────────────────────────────────────────────────────────────
+let rolesData = [], canchasData = [], usuariosData = [];
 
-fetchData('Usuarios/ObtenerUsuarios').then(d => {
-  document.getElementById('statUsuarios').textContent = d.length;
-  renderTable('content-usuarios','badge-usuarios', d, [
-    {key:'nombre',label:'Nombre'},{key:'correo',label:'Correo'},{key:'telefono',label:'Teléfono'},{key:'fecha_registro',label:'Registro',date:true}
-  ]);
-}).catch(() => { document.getElementById('content-usuarios').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+// Usuarios
+function cargarUsuarios() {
+  fetchData('UsuariosControlador/ObtenerUsuarios').then(d => {
+    usuariosData = d;
+    document.getElementById('statUsuarios').textContent = d.length;
+    const datos = d.map(r => ({ ...r, _acciones: '' }));
+    renderTable('content-usuarios','badge-usuarios', datos, [
+      {key:'nombre',label:'Nombre'},{key:'correo',label:'Correo'},{key:'telefono',label:'Teléfono'},{key:'fecha_registro',label:'Registro',date:true}
+    ]);
+    // Llenar select de nueva reserva
+    document.getElementById('r-usuario').innerHTML = d.map(u => `<option value="${u.id_Usuario}">${u.nombre} (${u.correo})</option>`).join('');
+  }).catch(() => { document.getElementById('content-usuarios').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+}
 
-fetchData('Cancha/ObtenerCancha').then(d => {
-  document.getElementById('statCanchas').textContent = d.length;
-  renderTable('content-canchas','badge-canchas', d, [
-    {key:'nombre',label:'Nombre'},{key:'ubicacion',label:'Ubicación'},{key:'dimenciones',label:'Dimensiones'},{key:'precio_Hora',label:'Precio/Hora',money:true}
-  ]);
-}).catch(() => { document.getElementById('content-canchas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+// Canchas — con botón eliminar en cada fila
+function cargarCanchas() {
+  fetchData('CanchaControlador/ObtenerCancha').then(d => {
+    canchasData = d;
+    document.getElementById('statCanchas').textContent = d.length;
+    const datos = d.map(r => ({ ...r, _acciones: `<button class="btn-danger" onclick="eliminarCancha('${r.id_Canchas}','${r.nombre}')">🗑 Eliminar</button>` }));
+    renderTable('content-canchas','badge-canchas', datos, [
+      {key:'nombre',label:'Nombre'},{key:'ubicacion',label:'Ubicación'},{key:'dimenciones',label:'Dimensiones'},{key:'precio_Hora',label:'Precio/Hora',money:true}
+    ]);
+    // Llenar select de nueva reserva
+    document.getElementById('r-cancha').innerHTML = d.map(c => `<option value="${c.id_Canchas}">${c.nombre}</option>`).join('');
+  }).catch(() => { document.getElementById('content-canchas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+}
 
-fetchData('ReservaControladores/ObtenerReservas').then(d => {
-  document.getElementById('statReservas').textContent = d.length;
-  renderTable('content-reservas','badge-reservas', d, [
-    {key:'fecha_reserva',label:'Fecha',date:true},{key:'hora_inicio',label:'Inicio'},{key:'hora_fin',label:'Fin'},{key:'estado',label:'Estado',badge:true}
-  ]);
-}).catch(() => { document.getElementById('content-reservas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+// Reservas — con actualización automática cada 30 segundos
+function cargarReservas() {
+  fetchData('ReservaControladores/ObtenerReservas').then(d => {
+    document.getElementById('statReservas').textContent = d.length;
+    renderTable('content-reservas','badge-reservas', d.map(r=>({...r,_acciones:''})), [
+      {key:'fecha_reserva',label:'Fecha',date:true},{key:'hora_inicio',label:'Inicio'},{key:'hora_fin',label:'Fin'},{key:'estado',label:'Estado',badge:true}
+    ]);
+  }).catch(() => { document.getElementById('content-reservas').innerHTML='<p style="color:#ff5252;padding:20px">Error al cargar</p>'; });
+}
 
+// Roles
 fetchData('RolesControladores/ObtenerRoles').then(d => {
   rolesData = d;
   document.getElementById('statRoles').textContent = d.length;
-  renderTable('content-roles','badge-roles', d, [
+  renderTable('content-roles','badge-roles', d.map(r=>({...r,_acciones:''})), [
     {key:'nombre_rol',label:'Rol'},{key:'descripcion',label:'Descripción'},{key:'nivel_acceso',label:'Nivel'},{key:'activo',label:'Estado',badge:true}
   ]);
 }).catch(() => {
   const swaggerUrl = CONFIG.API.replace('/api','') + '/swagger';
-  document.getElementById('content-roles').innerHTML=`<p style="color:#ff5252;padding:20px">Error al cargar roles. La API no responde. Ejecuta <b>dotnet run</b> y recarga.</p>`;
+  document.getElementById('content-roles').innerHTML=`<p style="color:#ff5252;padding:20px">Error al cargar roles. Ejecuta <b>dotnet run</b> y recarga.</p>`;
   document.getElementById('statRoles').textContent = '!';
 });
 
+// Cargar todo al inicio
+cargarUsuarios();
+cargarCanchas();
+cargarReservas();
+
+// ─── ACTUALIZACIÓN AUTOMÁTICA ─────────────────────────────────────────────────
+// Cada 30 segundos recarga reservas y muestra notificación si hay nuevas
+let totalReservasAnterior = 0;
+setInterval(() => {
+  fetchData('ReservaControladores/ObtenerReservas').then(d => {
+    if (totalReservasAnterior > 0 && d.length > totalReservasAnterior) {
+      const nuevas = d.length - totalReservasAnterior;
+      notificar(`🆕 ${nuevas} nueva(s) reserva(s) registrada(s)`, 'info');
+    }
+    totalReservasAnterior = d.length;
+    document.getElementById('statReservas').textContent = d.length;
+    renderTable('content-reservas','badge-reservas', d.map(r=>({...r,_acciones:''})), [
+      {key:'fecha_reserva',label:'Fecha',date:true},{key:'hora_inicio',label:'Inicio'},{key:'hora_fin',label:'Fin'},{key:'estado',label:'Estado',badge:true}
+    ]);
+  }).catch(() => {});
+}, 30000);
+
+// ─── ELIMINAR CANCHA ──────────────────────────────────────────────────────────
+async function eliminarCancha(id, nombre) {
+  if (!confirm(`¿Seguro que quieres eliminar "${nombre}"?`)) return;
+  try {
+    const res = await fetch(`${API}/CanchaControlador/EliminarCancha/${id}`, { method: 'DELETE', headers: authHeaders });
+    if (!res.ok) throw new Error();
+    notificar(`Cancha "${nombre}" eliminada correctamente`);
+    cargarCanchas();
+  } catch { notificar('Error al eliminar la cancha', 'error'); }
+}
+
+// ─── HORARIOS DISPONIBLES (admin) ─────────────────────────────────────────────
+function cargarHorariosAdmin() {
+  const fecha = document.getElementById('r-fecha').value;
+  if (!fecha) return;
+  const horas = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+  const ocupadas = ['09:00','14:00','18:00']; // simulado
+  document.getElementById('horariosAdmin').innerHTML = horas.map(h => {
+    const ocupado = ocupadas.includes(h);
+    return `<div class="hora-item ${ocupado ? 'ocupado' : 'libre'}">${h}<br><small>${ocupado ? 'Ocupado' : 'Libre'}</small></div>`;
+  }).join('');
+}
+
+// ─── NUEVA RESERVA MANUAL ─────────────────────────────────────────────────────
+document.getElementById('formNuevaReserva').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Creando...'; btn.disabled = true;
+  const hora = document.getElementById('r-hora').value;
+  const horaNum = parseInt(hora);
+  const horaFin = (horaNum + 1).toString().padStart(2,'0') + ':00:00';
+  const body = {
+    id_Usuario: document.getElementById('r-usuario').value,
+    id_Cancha: document.getElementById('r-cancha').value,
+    fecha_reserva: document.getElementById('r-fecha').value + 'T00:00:00',
+    hora_inicio: hora,
+    hora_fin: horaFin,
+    estado: 'Confirmada'
+  };
+  try {
+    const res = await fetch(`${API}/ReservaControladores/CrearReserva`, { method:'POST', headers:authHeaders, body:JSON.stringify(body) });
+    if (!res.ok) throw new Error();
+    notificar('✅ Reserva creada correctamente desde admin');
+    cargarReservas();
+    e.target.reset();
+    document.getElementById('horariosAdmin').innerHTML = '<p style="color:#555;font-size:0.82rem">Selecciona cancha y fecha para ver disponibilidad</p>';
+  } catch { notificar('Error al crear la reserva', 'error'); }
+  finally { btn.textContent = '📅 Crear reserva'; btn.disabled = false; }
+});
+
 // ─── MODAL CANCHA ─────────────────────────────────────────────────────────────
-// Abre el modal para crear una nueva cancha
 function abrirModalCancha() {
   document.getElementById('modalCancha').classList.add('open');
   document.getElementById('cancha-error').style.display = 'none';
@@ -226,38 +405,26 @@ function abrirModalCancha() {
 }
 function cerrarModalCancha() { document.getElementById('modalCancha').classList.remove('open'); }
 
-// Envía los datos de la nueva cancha al endpoint POST /api/CanchaControlador/CrearCancha
 document.getElementById('formCrearCancha').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = e.target.querySelector('button[type=submit]');
   btn.textContent = 'Creando...'; btn.disabled = true;
-
   const body = {
     nombre: document.getElementById('c-nombre').value,
     ubicacion: document.getElementById('c-ubicacion').value,
     dimenciones: document.getElementById('c-dim').value,
     precio_Hora: parseFloat(document.getElementById('c-precio').value)
   };
-
   try {
-    const res = await fetch(`${API}/Cancha/CrearCancha`, {
-      method: 'POST', headers: authHeaders, body: JSON.stringify(body)
-    });
+    const res = await fetch(`${API}/CanchaControlador/CrearCancha`, { method:'POST', headers:authHeaders, body:JSON.stringify(body) });
     if (!res.ok) throw new Error();
     document.getElementById('cancha-ok').style.display = 'block';
-    toast('✅ Cancha creada');
-    // Recarga la tabla de canchas con el nuevo dato
-    fetchData('Cancha/ObtenerCancha').then(d => {
-      document.getElementById('statCanchas').textContent = d.length;
-      renderTable('content-canchas', 'badge-canchas', d, [
-        {key:'nombre',label:'Nombre'},{key:'ubicacion',label:'Ubicación'},
-        {key:'dimenciones',label:'Dimensiones'},{key:'precio_Hora',label:'Precio/Hora',money:true}
-      ]);
-    });
+    notificar(`Cancha "${body.nombre}" creada correctamente`);
+    cargarCanchas();
     setTimeout(cerrarModalCancha, 1500);
   } catch {
     document.getElementById('cancha-error').style.display = 'block';
-    toast('Error al crear la cancha', true);
+    notificar('Error al crear la cancha', 'error');
   } finally { btn.textContent = 'Crear cancha'; btn.disabled = false; }
 });
 
@@ -270,20 +437,14 @@ function abrirModalUsuario() {
   const sel = document.getElementById('u-rol');
   const status = document.getElementById('roles-status');
   if (rolesData.length) {
-    // Solo roles que NO sean admin
-    const rolesFiltrados = rolesData.filter(r =>
-      !r.nombre_rol?.toLowerCase().includes('admin')
-    );
-    if (rolesFiltrados.length) {
-      sel.innerHTML = rolesFiltrados.map(r=>`<option value="${r.id_Roles}">${r.nombre_rol}</option>`).join('');
-      status.textContent = '';
-    } else {
-      sel.innerHTML = '<option value="">Sin roles disponibles</option>';
-      status.textContent = 'No hay roles de usuario disponibles';
-    }
+    const filtrados = rolesData.filter(r => !r.nombre_rol?.toLowerCase().includes('admin'));
+    sel.innerHTML = filtrados.length
+      ? filtrados.map(r=>`<option value="${r.id_Roles}">${r.nombre_rol}</option>`).join('')
+      : '<option value="">Sin roles disponibles</option>';
+    status.textContent = '';
   } else {
     sel.innerHTML = '<option value="">Sin roles — API no disponible</option>';
-    status.textContent = '?? La API no responde. Ejecuta dotnet run y recarga la p�gina';
+    status.textContent = '⚠️ La API no responde. Ejecuta dotnet run y recarga la página';
     status.style.color = '#ff9800';
   }
 }
@@ -302,16 +463,15 @@ document.getElementById('formCrearUsuario').addEventListener('submit', async e =
     fecha_registro: new Date().toISOString()
   };
   try {
-    const res = await fetch(`${API}/Usuarios/CrearUsuario`, { method:'POST', headers:authHeaders, body:JSON.stringify(body) });
+    const res = await fetch(`${API}/UsuariosControlador/CrearUsuario`, { method:'POST', headers:authHeaders, body:JSON.stringify(body) });
     if (!res.ok) throw new Error();
     document.getElementById('modal-ok').style.display='block';
-    document.getElementById('modal-error').style.display='none';
-    toast('✅ Usuario creado');
+    notificar(`Usuario "${body.nombre}" creado correctamente`);
+    cargarUsuarios();
     setTimeout(cerrarModalUsuario, 1500);
-    fetchData('Usuarios/ObtenerUsuarios').then(d => renderTable('content-usuarios','badge-usuarios',d,[{key:'nombre',label:'Nombre'},{key:'correo',label:'Correo'},{key:'telefono',label:'Teléfono'},{key:'fecha_registro',label:'Registro',date:true}]));
   } catch {
     document.getElementById('modal-error').style.display='block';
-    toast('Error al crear usuario', true);
+    notificar('Error al crear usuario', 'error');
   } finally { btn.textContent='Crear usuario'; btn.disabled=false; }
 });
 </script>

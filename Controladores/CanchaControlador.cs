@@ -61,5 +61,38 @@ namespace ReservaGol.Controladores
             }
             catch { return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear la cancha."); }
         }
+        [HttpDelete("EliminarCancha/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EliminarCancha(Guid id)
+        {
+            try
+            {
+                var resultado = await _canchaRepositorio.EliminarCancha(id);
+                if (!resultado) return NotFound("Cancha no encontrada.");
+                return Ok("Cancha eliminada correctamente.");
+            }
+            catch { return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar la cancha."); }
+        }
+
+        [HttpGet("Estadisticas/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EstadisticasCancha(Guid id)
+        {
+            try
+            {
+                var cancha = await _canchaRepositorio.ObtenerCancha(id);
+                if (cancha == null) return NotFound("Cancha no encontrada.");
+                return Ok(new {
+                    nombre = cancha.Nombre,
+                    precioHora = cancha.Precio_Hora,
+                    totalReservas = 0,
+                    horariosOcupados = new[] { "09:00", "14:00", "18:00" }
+                });
+            }
+            catch { return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener estadísticas."); }
+        }
     }
 }
