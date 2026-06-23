@@ -66,7 +66,7 @@ namespace ReservaGol.Repositorios
                 existente.Nombre = usuario.Nombre;
                 existente.Correo = usuario.Correo;
                 existente.Telefono = usuario.Telefono;
-                existente.Contraseña = usuario.Contraseña;
+                existente.ContraseÃ±a = usuario.ContraseÃ±a;
                 existente.Fecha_registro = usuario.Fecha_registro;
                 _context.Usuarios.Update(existente);
                 await _context.SaveChangesAsync();

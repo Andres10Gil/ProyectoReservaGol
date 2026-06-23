@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+
+  # ── Aplicación ASP.NET Core ─────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reservagol_app
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ReservaGolDB;User Id=sa;Password=Admin1234!;TrustServerCertificate=True;
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - reservagol_net
+
+  # ── SQL Server ───────────────────────────────────────────────
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: reservagol_sqlserver
+    environment:
+      SA_PASSWORD: "Admin1234!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./sql/init:/docker-entrypoint-initdb.d
+      - ./sql/init-db.sh:/init-db.sh
+    command: >
+      bash -c "
+        /opt/mssql/bin/sqlservr &
+        bash /init-db.sh &&
+        wait
+      "
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd",
+             "-S", "localhost", "-U", "sa", "-P", "Admin1234!",
+             "-Q", "SELECT 1", "-No", "-C"]
+      interval: 10s
+      retries: 10
+      start_period: 40s
+    networks:
+      - reservagol_net
+
+  # ── Adminer (interfaz web para SQL Server) ───────────────────
+  adminer:
+    image: adminer:latest
+    container_name: reservagol_adminer
+    ports:
+      - "8888:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: sqlserver
+      ADMINER_DESIGN: pepa-linha
+    depends_on:
+      - sqlserver
+    networks:
+      - reservagol_net
+
+volumes:
+  sqlserver_data:
+
+networks:
+  reservagol_net:
+    driver: bridge
